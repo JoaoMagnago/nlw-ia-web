@@ -1,3 +1,4 @@
+import { useCompletion } from 'ai/react';
 import { Github, Wand2 } from 'lucide-react';
 import { useState } from 'react';
 import { PromptSelect } from './components/prompt-select';
@@ -18,10 +19,15 @@ import './index.css';
 
 export const App = () => {
   const [temperature, setTemperature] = useState(0.5);
+  const [videoId, setVideoId] = useState<string | null>(null);
 
-  function handlePromptSelected(template: string) {
-    console.log(template);
-  }
+  const { input, setInput, handleInputChange } = useCompletion({
+    api: 'https://localhost:3333/ai/complete',
+    body: {
+      videoId,
+      temperature,
+    },
+  });
 
   return (
     <div className={'min-h-screen flex flex-col'}>
@@ -48,6 +54,8 @@ export const App = () => {
             <Textarea
               placeholder={'Inclua o prompt para a IA...'}
               className={'resize-none p-4 leading-relaxed'}
+              value={input}
+              onChange={handleInputChange}
             />
             <Textarea
               placeholder={'Resultado gerado pela IA...'}
@@ -64,7 +72,7 @@ export const App = () => {
           </p>
         </div>
         <aside className={'w-80 space-y-6'}>
-          <VideoInputForm />
+          <VideoInputForm onVideoUploaded={setVideoId} />
 
           <Separator />
 
@@ -72,7 +80,7 @@ export const App = () => {
             <div className={'space-y-2'}>
               <Label>Prompt</Label>
 
-              <PromptSelect onPromptSelected={handlePromptSelected} />
+              <PromptSelect onPromptSelected={setInput} />
             </div>
 
             <div className={'space-y-2'}>
