@@ -1,4 +1,5 @@
 import { Github, Wand2 } from 'lucide-react';
+import { useState } from 'react';
 import { PromptSelect } from './components/prompt-select';
 import { Button } from './components/ui/button';
 import { Label } from './components/ui/label';
@@ -16,6 +17,8 @@ import { VideoInputForm } from './components/video-input-form';
 import './index.css';
 
 export const App = () => {
+  const [temperature, setTemperature] = useState(0.5);
+
   function handlePromptSelected(template: string) {
     console.log(template);
   }
@@ -94,7 +97,13 @@ export const App = () => {
 
             <div className={'space-y-4'}>
               <Label>Temperatura</Label>
-              <Slider min={0} max={1} step={0.1} />
+              <Slider
+                min={0}
+                max={1}
+                step={0.1}
+                value={[temperature]}
+                onValueChange={(value) => setTemperature(value[0])}
+              />
 
               <span
                 className={
