@@ -21,11 +21,21 @@ export const App = () => {
   const [temperature, setTemperature] = useState(0.5);
   const [videoId, setVideoId] = useState<string | null>(null);
 
-  const { input, setInput, handleInputChange } = useCompletion({
+  const {
+    input,
+    completion,
+    isLoading,
+    setInput,
+    handleInputChange,
+    handleSubmit,
+  } = useCompletion({
     api: 'https://localhost:3333/ai/complete',
     body: {
       videoId,
       temperature,
+    },
+    headers: {
+      'Content-type': 'application/json',
     },
   });
 
@@ -60,6 +70,7 @@ export const App = () => {
             <Textarea
               placeholder={'Resultado gerado pela IA...'}
               readOnly
+              value={completion}
               className={'resize-none p-4 leading-relaxed'}
             />
           </div>
@@ -76,7 +87,7 @@ export const App = () => {
 
           <Separator />
 
-          <form className={'space-y-6'}>
+          <form className={'space-y-6'} onSubmit={handleSubmit}>
             <div className={'space-y-2'}>
               <Label>Prompt</Label>
 
@@ -125,7 +136,7 @@ export const App = () => {
 
             <Separator />
 
-            <Button type={'submit'} className={'w-full'}>
+            <Button type={'submit'} disabled={isLoading} className={'w-full'}>
               Executar <Wand2 className={'w-4 h-4 ml-2'} />
             </Button>
           </form>
